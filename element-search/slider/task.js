@@ -1,26 +1,34 @@
-const slides = document.querySelectorAll('.slider__items .slider__item');
+const slides = document.querySelectorAll('.slider__item');
+const dots = document.querySelectorAll('.slider__dot');
+const next = document.querySelector('.slider__arrow_next');
+const prev = document.querySelector('.slider__arrow_prev');
 let currentSlide = 0;
-const next = document.querySelector('.slider__arrow .slider__arrow_next');
-const prev = document.querySelector('.slider__arrow .slider__arrow_prev');
-function nextSlide(){
-    goToSlide(currentSlide + 1);
-}
-function prevSlide(){
-    goToSlide(currentSlide -1 );
-}
-function goToSlide(n){
-    slides[currentSlide].className = 'slider__item';
-    currentSlide = (n + slides.length) % slides.length;
-    slides[currentSlide].className = 'slider__item slider__item_active';
-}
-const sliderArrows = document.querySelectorAll('.slider__arrows .slider__arrow');
 
-[].forEach.call(sliderArrows, function(el){
-    el.onclick = function(){
-        if (el === next) {
-            nextSlide();
-        } else {
-            prevSlide();
-        }
-    };
+next.onclick = () => {
+    if (currentSlide + 1 === slides.length){
+        currentSlide = 0;
+    } else {
+        currentSlide += 1;
+    }
+    showSlide(currentSlide);
+}
+prev.onclick = () => {
+    if (currentSlide - 1 < 0){
+        currentSlide = slides.length - 1;
+    } else {
+        currentSlide -= 1;
+    }
+    showSlide(currentSlide);
+}
+
+dots[currentSlide].classList.add('slider__dot_active');
+[...dots].forEach((item, i) => item.onclick = () => {
+    showSlide(i);
 });
+
+function showSlide(i){
+    [...slides].forEach((item) => item.classList.remove('slider__item_active'));
+    [...dots].forEach((item) => item.classList.remove('slider__dot_active'));
+    slides[i].classList.add('slider__item_active');
+    dots[i].classList.add('slider__dot_active');
+}
